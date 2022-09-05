@@ -47,4 +47,14 @@ To setup, a remote controller executed the following commands extracted from [..
 Follow this set of instructions so the Autonomous vehicle is ready to go when it is powered. 
 # More information
 # Authors
+- [Alexis Garcia Gutierrez](https://github.com/AlexGarciaG)
+
+
+- [Rodrigo Gutiérrez Alvarez](https://github.com/D3ceiver)
+
+
+- [Laura Aylín Rivero López](https://github.com/LauRivero150920)
+
+
+- [Mónica Jimena Juárez Espinosa](https://github.com/Monica3751)
 # Other sources.
