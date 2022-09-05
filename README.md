@@ -13,7 +13,7 @@ Vistech aims to apply vision and technology to design an autonomous vehicle that
   * [Arduino](#arduino)
   * [Joy](#joy)
   * [Ready to go when turned on.](#ready-to-go-when-turned-on)
-- [More information](#more-information)
+- [More Information](#more-information)
 - [Authors](#authors)
 - [Other sources.](#other-sources)
 # Objectives.
@@ -33,10 +33,10 @@ Camera Web Logitech B5252
 # Install Requirements
 The following commands must be executed on the computer onboard (Jetson Xavier Nx)
 ### Software
-Install ROS
+[Install ROS](http://wiki.ros.org/noetic/Installation/Ubuntu)
+[Install Arduino](https://docs.arduino.cc/software/ide-v1/tutorials/Linux)
 ### Packages
 ### Git
-
 # Set up environment.
 This section will be executed after all the requirements are installed; otherwise, it will work improperly or fail.
 ## Arduino
@@ -57,4 +57,15 @@ Follow this set of instructions so the Autonomous vehicle is ready to go when it
 
 
 - [Mónica Jimena Juárez Espinosa](https://github.com/Monica3751)
+
 # Other sources.
+- [Download Arduino](https://www.arduino.cc/en/software)
+- [Install Arduino on Ubuntu](https://docs.arduino.cc/software/ide-v1/tutorials/Linux)
+- [Install ROS on Ubuntu](http://wiki.ros.org/noetic/Installation/Ubuntu)
+- [ROS tutorials](http://wiki.ros.org/ROS/Tutorials)
+- [Make a ROS Launch Start on Boot (robot_upstart)](https://roboticsbackend.com/make-ros-launch-start-on-boot-with-robot_upstart/)
+- [Configuring and Using a Linux-Supported Joystick with ROS](http://wiki.ros.org/joy/Tutorials/ConfiguringALinuxJoystick)
+- [Converting between ROS images and OpenCV images (Python)](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython) 
+- [JetPack SDK](https://developer.nvidia.com/embedded/jetpack)
+- [Write Image to the MicroSD Card](https://developer.nvidia.com/embedded/learn/get-started-jetson-xavier-nx-devkit#write) 
+- [GitHub Wiki TOC generator](https://ecotrust-canada.github.io/markdown-toc/)
