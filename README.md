@@ -1,7 +1,21 @@
 # vistech
 Vistech aims to apply vision and technology to design an autonomous vehicle that can go from A to B while identifying traffic signs, other cars, traffic lights, and persons.
 # Table of contents
-
+- [Objectives.](#objectives)
+- [Equitment used.](#equitment-used)
+  * [Software](#software)
+  * [Hardware](#hardware)
+- [Install Requirements](#install-requirements)
+    + [Software](#software-1)
+    + [Packages](#packages)
+    + [Git](#git)
+- [Set up environment.](#set-up-environment)
+  * [Arduino](#arduino)
+  * [Joy](#joy)
+  * [Ready to go when turned on.](#ready-to-go-when-turned-on)
+- [More information](#more-information)
+- [Authors](#authors)
+- [Other sources.](#other-sources)
 # Objectives.
 The main objective of this project is to create a differential robot representing a car that will travel autonomously while following the basic traffic signs(speed limit, stop, turns ), other vehicles, traffic lights, and persons. 
 The secondary objective is to implement a directional Akerman direction so the robot can more significantly represent actual car behavior. 
