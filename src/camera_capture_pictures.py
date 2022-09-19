@@ -34,12 +34,13 @@ class camera_capture_pictures:
         
 
     def __transform_ros_to_opencv(self,image_message):
-        
+        # Get dif 
         dif = (datetime.datetime.now().timestamp()-self.ct.timestamp())        
         if (self.time_between_pictures<int(dif)):
             self.ct = datetime.datetime.now()
             path_name = self.path_saved_pictures+self.pintures_name+self.ct.strftime("%m-%d-%Y_%H-%M-%S")+self.pintures_format
-            cv_image = self.bridge.imgmsg_to_cv2(image_message, desired_encoding='passthrough') 
+            # Transform openCV
+            cv_image = self.bridge.imgmsg_to_cv2(image_message, desired_encoding='bgr8') 
             cv2.imwrite(path_name, cv_image)
             print(self.counter)
             self.counter+=1
