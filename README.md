@@ -198,3 +198,4 @@ $ sudo systemctl restart robot_upstart_vistech.service
 - [JetPack SDK](https://developer.nvidia.com/embedded/jetpack)
 - [Write Image to the MicroSD Card](https://developer.nvidia.com/embedded/learn/get-started-jetson-xavier-nx-devkit#write) 
 - [GitHub Wiki TOC generator](https://ecotrust-canada.github.io/markdown-toc/)
+- [ROS run python in virtual env](https://medium.com/codeda/ros-run-python-in-virtual-env-8c579304b9c9)
