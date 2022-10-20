@@ -25,6 +25,7 @@ int yPosition = 0;
 int SW_state = 0;
 int mapX = 0;
 int mapY = 0;
+int vel_map = 0;
 
 void setup() {
   Serial.begin(9600); 
@@ -50,26 +51,31 @@ void loop() {
   mapX = map(xPosition, 0, 1023, -512, 512);
   mapY = map(yPosition, 0, 1023, -512, 512);
   
-  if(mapY < -250){
-    moveForward(mapY * -0.498046875);  
-  } else if(mapY > 210){
-    moveBackwards(mapY * 0.498046875);
-  } else if(mapX < -230){
-    moveLeft(mapX * -0.498046875);
-  } else if(mapX > 230){
-    moveRight(mapX * 0.498046875);
+  if(mapY < -180){
+    vel_map = map(-(mapY), 180, 340, 0, 255);
+    moveForward(vel_map);  
+  } else if(mapY > 180){
+    vel_map = map(mapY, 180, 340, 0, 255);
+    moveBackwards(vel_map);
+  } else if(mapX < -100){
+    vel_map = map(-(mapX), 100, 310, 0, 255);
+    moveLeft(vel_map);
+  } else if(mapX > 100){
+    vel_map = map(mapX, 100, 330, 0, 255);
+    moveRight(vel_map);
   } else if(SW_state == 0){
     stopMoving(); 
   } else{
     stopMoving(); 
   }
+  Serial.print(" | Vel: ");
+  Serial.print(vel_map);
   Serial.print(" | X: ");
   Serial.print(mapX);
   Serial.print(" | Y: ");
   Serial.print(mapY);
   Serial.print(" | Button: ");
   Serial.println(SW_state);
-
   delay(100); 
 }
 
