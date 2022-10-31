@@ -1,0 +1,20 @@
+<launch>
+<!--Control-->
+    <node pkg="joy" type="joy_node" name="joy_node"/>
+    <node pkg="vistech" type="autonomous.py" name="autonomous"/>
+    <node pkg="vistech" type="control.py" name="control"/>
+    <node pkg="vistech" type="manual.py" name="manual"/>
+
+
+<!--Motors-->
+
+<include file="$(find vistech)/launch/roboclaw_ros/roboclaw.launch">
+    <arg name="address_master" default="128"/>
+    <arg name="address_slave" default="129"/>
+</include>
+<!--Lidar-->
+
+<include file="$(find vistech)/launch/rplidar_ros/rplidar.launch">
+</include>
+
+</launch>

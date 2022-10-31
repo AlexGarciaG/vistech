@@ -7,6 +7,18 @@ project(vistech)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+
+set(RPLIDAR_SDK_PATH "./sdk/")
+set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
+FILE(GLOB RPLIDAR_SDK_SRC 
+  "${RPLIDAR_SDK_PATH}/src/arch/linux/*.cpp"
+  "${RPLIDAR_SDK_PATH}/src/hal/*.cpp"
+  "${RPLIDAR_SDK_PATH}/src/*.cpp"
+)
+
+
 find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   geometry_msgs
@@ -14,6 +26,11 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
+
+  nav_msgs
+  tf
+
+  rosconsole
 )
 find_package(OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -121,6 +138,8 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
 # include
+  ${RPLIDAR_SDK_PATH}/include
+  ${RPLIDAR_SDK_PATH}/src
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -208,3 +227,20 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(rplidarNode nodes/rplidar_ros/node.cpp ${RPLIDAR_SDK_SRC})
+target_link_libraries(rplidarNode ${catkin_LIBRARIES})
+
+add_executable(rplidarNodeClient nodes/rplidar_ros/client.cpp)
+target_link_libraries(rplidarNodeClient ${catkin_LIBRARIES})
+
+install(TARGETS rplidarNode rplidarNodeClient
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY launch rviz sdk
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  USE_SOURCE_PERMISSIONS
+)

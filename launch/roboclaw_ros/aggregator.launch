@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="diagnostic_aggregator" type="aggregator_node"
+        name="diagnostic_aggregator" >
+    <!-- Load the file you made above -->
+    <rosparam command="load"
+              file="$(find vistech)/config/roboclaw_ros/roboclaw_diag.yaml" />
+  </node>
+</launch>
