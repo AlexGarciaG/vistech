@@ -12,6 +12,14 @@ class Roboclaw:
 		self.timeout = timeout
 		self._trystimeout = retries
 		self._crc = 0
+		try:
+			self._port = serial.Serial(port=self.comport, baudrate=self.rate, timeout=1, interCharTimeout=self.timeout)
+			self._port.flush()
+			self._port.flushInput()
+			self._port.flushOutput()
+		except:
+			pass
+
 
 	#Command Enums
 	class Cmd():
@@ -1079,6 +1087,8 @@ class Roboclaw:
 		
 	def Open(self):
 		try:
+			if (self._port.is_open):
+				self._port.close()
 			self._port = serial.Serial(port=self.comport, baudrate=self.rate, timeout=1, interCharTimeout=self.timeout)
 			self._port.flush()
 			self._port.flushInput()

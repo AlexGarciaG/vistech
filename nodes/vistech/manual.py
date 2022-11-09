@@ -12,7 +12,7 @@ class Control():
 
         self.robot_velocity = Twist()
         #################################################################################
-        self.max_linear_velocity = int(rospy.get_param("~max_linear_velocity", 2.0))
+        self.max_linear_velocity = int(rospy.get_param("~max_linear_velocity", 1.0))
         self.max_angular_velocity = int(rospy.get_param("~max_angular_velocity", pi))
             # Limit number
         self.max_angular_velocity = max(-pi, self.max_angular_velocity)
@@ -52,7 +52,7 @@ class Control():
 
             r.sleep()
     def __calculate_velocity(self):
-        angular_z = self.joy.axes[0] * self.max_angular_velocity
+        angular_z = -self.joy.axes[0] * self.max_angular_velocity
         linear_x  = self.joy.axes[1] * self.max_linear_velocity
         return angular_z, linear_x
     def __get_data_joy(self, joy):

@@ -255,55 +255,49 @@ class Node:
             try:
                 if (rospy.get_rostime() - self.last_set_speed_time).to_sec() > 1./float(self.CMD_FREQ):
                     # rospy.loginfo("Did not get command for 1 second, stopping")
-                    while True:
-                        try:
-                            with self.mutex:
-                                self.roboclaw.ForwardM1(self.address_master, 0)
-                                self.roboclaw.ForwardM2(self.address_master, 0)
-                                self.roboclaw.ForwardM1(self.address_slave, 0)
-                                self.roboclaw.ForwardM2(self.address_slave, 0)
-                                break
-                        except OSError as e:
-                            #rospy.logerr("Could not stop")
-                            #rospy.logdebug(e)
-                            self.start_comunication()
+                    try:
+                        with self.mutex:
+                            self.roboclaw.ForwardM1(self.address_master, 0)
+                            self.roboclaw.ForwardM2(self.address_master, 0)
+                            self.roboclaw.ForwardM1(self.address_slave, 0)
+                            self.roboclaw.ForwardM2(self.address_slave, 0)
+                    except OSError as e:
+                        #rospy.logerr("Could not stop")
+                        #rospy.logdebug(e)
+                        self.start_comunication()
 
                 # TODO need find solution to the OSError11 looks like sync problem with serial
-                while True:
-                    status1, enc1, crc1 = None, None, None
-                    status2, enc2, crc2 = None, None, None
-                    status1_1, enc1_1, crc1_1 = None, None, None
-                    status2_1, enc2_1, crc2_1 = None, None, None
-                    try:
-                        with self.mutex:
-                            status1, enc1, crc1 = self.roboclaw.ReadEncM1(self.address_master)
-                            status1_1, enc1_1, crc1_1 = self.roboclaw.ReadEncM1(self.address_slave)
-                    except ValueError:
-                        pass
-                    except OSError as e:
-                        #rospy.logwarn("ReadEncM1 OSError: %d", e.errno)
-                        #rospy.logdebug(e)
-                        self.start_comunication()
-                        continue
-
-                    try:
-                        with self.mutex:
-                            status2, enc2, crc2 = self.roboclaw.ReadEncM2(self.address_master)
-                            status2_1, enc2_1, crc2_1 = self.roboclaw.ReadEncM2(self.address_slave)
-                    except ValueError:
-                        pass
-                    except OSError as e:
-                        #rospy.logwarn("ReadEncM2 OSError: %d", e.errno)
-                        #rospy.logdebug(e)
-                        self.start_comunication()
-                        continue
-                    
-                    if ((isinstance(enc1,Number) and isinstance(enc2,Number))):
-                        #rospy.logdebug(" Encoders %d %d" % (enc1, enc2))
-                        self.encodm.update_publish((enc2+enc2_1)/2, (enc1+enc1_1)/2)
-                        self.updater.update()
-                    r_time.sleep()
-                    break
+                status1, enc1, crc1 = None, None, None
+                status2, enc2, crc2 = None, None, None
+                status1_1, enc1_1, crc1_1 = None, None, None
+                status2_1, enc2_1, crc2_1 = None, None, None
+                try:
+                    with self.mutex:
+                        status1, enc1, crc1 = self.roboclaw.ReadEncM1(self.address_master)
+                        status1_1, enc1_1, crc1_1 = self.roboclaw.ReadEncM1(self.address_slave)
+                except ValueError:
+                    pass
+                except OSError as e:
+                    #rospy.logwarn("ReadEncM1 OSError: %d", e.errno)
+                    #rospy.logdebug(e)
+                    self.start_comunication()
+                    continue
+                try:
+                    with self.mutex:
+                        status2, enc2, crc2 = self.roboclaw.ReadEncM2(self.address_master)
+                        status2_1, enc2_1, crc2_1 = self.roboclaw.ReadEncM2(self.address_slave)
+                except ValueError:
+                    pass
+                except OSError as e:
+                    #rospy.logwarn("ReadEncM2 OSError: %d", e.errno)
+                    #rospy.logdebug(e)
+                    self.start_comunication()
+                    continue
+                if ((isinstance(enc1,Number) and isinstance(enc2,Number))):
+                    #rospy.logdebug(" Encoders %d %d" % (enc1, enc2))
+                    self.encodm.update_publish((enc2+enc2_1)/2, (enc1+enc1_1)/2)
+                    self.updater.update()
+                r_time.sleep()
             except:
                 self.start_comunication()
             rospy.sleep(self.rospy_sleep)
@@ -325,24 +319,21 @@ class Node:
         vl_ticks = int(vl * self.TICKS_PER_METER)
 
         rospy.loginfo("vr_ticks:%8d vl_ticks: %8d", vr_ticks, vl_ticks)
-        while True:
-            try:
-                # This is a hack way to keep a poorly tuned PID from making noise at speed 0
-                with self.mutex:
-                    if vr_ticks == 0 and vl_ticks == 0:
-                        self.roboclaw.ForwardM1(self.address_master, 0)
-                        self.roboclaw.ForwardM2(self.address_master, 0)
-                        self.roboclaw.ForwardM1(self.address_slave, 0)
-                        self.roboclaw.ForwardM2(self.address_slave, 0)
-                    else:
-                        self.roboclaw.SpeedM1M2(self.address_master, vr_ticks, vl_ticks)
-                        self.roboclaw.SpeedM1M2(self.address_slave, vr_ticks, vl_ticks)
-                    break
-            except:
-                #rospy.logwarn("SpeedM1M2 OSError: %d", e.errno)
-                #rospy.logdebug(e)
-                self.start_comunication()
-                continue
+        try:
+            # This is a hack way to keep a poorly tuned PID from making noise at speed 0
+            with self.mutex:
+                if vr_ticks == 0 and vl_ticks == 0:
+                    self.roboclaw.ForwardM1(self.address_master, 0)
+                    self.roboclaw.ForwardM2(self.address_master, 0)
+                    self.roboclaw.ForwardM1(self.address_slave, 0)
+                    self.roboclaw.ForwardM2(self.address_slave, 0)
+                else:
+                    self.roboclaw.SpeedM1M2(self.address_master, vr_ticks, vl_ticks)
+                    self.roboclaw.SpeedM1M2(self.address_slave, vr_ticks, vl_ticks)
+        except:
+            #rospy.logwarn("SpeedM1M2 OSError: %d", e.errno)
+            #rospy.logdebug(e)
+            pass
 
     # TODO: Need to make this work when more than one error is raised
     def check_vitals(self, stat):

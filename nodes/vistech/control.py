@@ -9,7 +9,7 @@ import time
 class Control():
     def __init__(self):
         ############################## Max velocity ###################################
-        self.max_linear_velocity = int(rospy.get_param("~max_linear_velocity", 2.0))
+        self.max_linear_velocity = int(rospy.get_param("~max_linear_velocity", 1.0))
         self.max_angular_velocity = int(rospy.get_param("~max_angular_velocity", pi))
             # Limit number
         self.max_angular_velocity = max(-pi, self.max_angular_velocity)
@@ -43,7 +43,7 @@ class Control():
     def __cmd_vel_autonomous(self, twist):
         self.autonomous          = twist
     def __enable_autonomous(self,data):
-        time.sleep(15)
+        time.sleep(5)
         self.autonomous_flag     = 1
     def on_shutdown(self):
         self.cmd_vel.linear.x = 0.0

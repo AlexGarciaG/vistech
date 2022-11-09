@@ -87,15 +87,6 @@ $ sudo apt-get install ros-noetic-rosserial-arduino
 $ sudo apt-get install ros-noetic-robot-upstart 
 ```
 
-### Lidar
-
-```
-$ cd ~/catkin_ws/src
-$ git clone https://github.com/Slamtec/rplidar_ros.git
-$ cd ~/catkin_ws
-$ catkin_make
-```
-
 ## Git
 
 Clone the repository

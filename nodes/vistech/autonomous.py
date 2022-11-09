@@ -8,11 +8,11 @@ from math import pi
 class Control():
     def __init__(self):
         ############################## Max velocity ###################################
-        max_linear_velocity = 0.3
-        max_distance = 8.0/2
+        max_linear_velocity = 1
+        max_distance = 12.0
         self.linear_proportional = max_linear_velocity/max_distance
         self.min_distance_to_move = 0.5
-        max_angular_velocity = 0.3
+        max_angular_velocity = pi
         max_radius = pi
         self.angular_proportional = max_angular_velocity/max_radius
         self.min_radius_to_move = (6*pi)/180.0
@@ -36,13 +36,10 @@ class Control():
             if self.laser_scan_received_flag: #If the flag is 1, then publish the message
                 self.laser_scan_received_flag = 0
                 near_object, angle = self.__get_closer_object()
-                if (angle>=0):
-                    angle = angle - pi
-                else:
-                    angle = angle + pi
+
                 rospy.loginfo("The distance to the closestes object is :"+str(near_object)+"m from the robot at " + str(angle*(180/pi)))
                 linear_x = near_object*self.linear_proportional
-                angular_z = angle*self.angular_proportional
+                angular_z = -angle*self.angular_proportional
             if (-self.min_distance_to_move < near_object < self.min_distance_to_move ):
                 linear_x = 0
             if (-self.min_radius_to_move < angle < self.min_radius_to_move ):
