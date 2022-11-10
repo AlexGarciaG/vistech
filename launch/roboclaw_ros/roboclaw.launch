@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="dev" default="/dev/ttyACM1"/>
+    <arg name="dev" default="/dev/roboclawMotors"/>
     <arg name="baud" default="115200"/>
     <arg name="address_master" default="128"/>
     <arg name="address_slave" default="129"/>
