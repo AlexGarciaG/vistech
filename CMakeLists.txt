@@ -228,13 +228,11 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(rplidarNode nodes/rplidar_ros/node.cpp ${RPLIDAR_SDK_SRC})
-target_link_libraries(rplidarNode ${catkin_LIBRARIES})
+add_executable(rplidarNode_vistech nodes/rplidar_ros/node.cpp ${RPLIDAR_SDK_SRC})
+target_link_libraries(rplidarNode_vistech ${catkin_LIBRARIES})
 
-add_executable(rplidarNodeClient nodes/rplidar_ros/client.cpp)
-target_link_libraries(rplidarNodeClient ${catkin_LIBRARIES})
 
-install(TARGETS rplidarNode rplidarNodeClient
+install(TARGETS rplidarNode_vistech 
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
