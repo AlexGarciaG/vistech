@@ -24,6 +24,7 @@ class Control():
         self.pub_enable_autonomous = rospy.Publisher('enable_autonomous', Empty, queue_size=1)
         ############################### SUBSCRIBERS #####################################
         rospy.Subscriber("/joy", Joy, self.__get_data_joy)
+        rospy.Subscriber("/joy_remote", Joy, self.__get_data_joy)
         ############ CONSTANTS AND VARIABLES ################
         self.joy_received_flag =False #This flag will tell us when at least one number has been received.
         self.joy = Joy()
