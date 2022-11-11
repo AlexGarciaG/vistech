@@ -256,3 +256,8 @@ $ sudo systemctl restart robot_upstart_vistech.service
 - [JetPack SDK](https://developer.nvidia.com/embedded/jetpack)
 - [Write Image to the MicroSD Card](https://developer.nvidia.com/embedded/learn/get-started-jetson-xavier-nx-devkit#write)
 - [GitHub Wiki TOC generator](https://ecotrust-canada.github.io/markdown-toc/)
+- [Label Images Tool](https://roboflow.com/)
+- [Assign a static USB port on Linux](https://msadowski.github.io/linux-static-port/)
+- [How to bind USB device under a static name?](https://unix.stackexchange.com/questions/66901/how-to-bind-usb-device-under-a-static-name)
+- [USB Multi-Unit Capability](https://forums.basicmicro.com/viewtopic.php?t=442)
+- [Driver 4.1.34, Noetic, multiple fixes ](https://github.com/sonyccd/roboclaw_ros/pull/31)
