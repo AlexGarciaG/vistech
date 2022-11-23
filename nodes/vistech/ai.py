@@ -6,7 +6,7 @@ from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from os import path
 from zipfile import ZipFile
-from os import mkdir
+import torch
 
 def detect_trafic_sign():
     bridge = CvBridge()
@@ -17,13 +17,14 @@ def detect_trafic_sign():
     rospy.init_node('detect_trafic_sign', anonymous=True)
     rate = rospy.Rate(60) 
     vid = cv2.VideoCapture(0)
-    if not(path.exists("ai_trafic_sign")):
-        with ZipFile("./ai_trafic_sign.zip", 'r') as zObject:
+    dir_path = path.dirname(path.realpath(__file__))
+    if not(path.exists(dir_path+"/ai_trafic_sign")):
+        with ZipFile(dir_path+"/ai_trafic_sign.zip", 'r') as zObject:
         
             # Extracting all the members of the zip 
             # into a specific location.
             zObject.extractall(
-                path="./")
+                path=dir_path+"/")
     while not rospy.is_shutdown():
 
         ret, frame = vid.read()
