@@ -1,1 +1,4 @@
 nodes/vistech/ai_trafic_sign/
+nodes/vistech/yolov7/
+nodes/vistech/WongKinYiu_yolov7_main/
+nodes/vistech/trusted_list

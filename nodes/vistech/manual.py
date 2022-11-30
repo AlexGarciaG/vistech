@@ -21,7 +21,8 @@ class Control():
         rospy.on_shutdown(self.on_shutdown)
         ############################### Publisher ######################################
         self.pub_cmd_vel = rospy.Publisher('cmd_vel/manual', Twist, queue_size=1)
-        self.pub_enable_autonomous = rospy.Publisher('enable_autonomous', Empty, queue_size=1)
+        self.enable_autonomous_follow_closest_object = rospy.Publisher('enable_autonomous/follow_closest_object', Empty, queue_size=1)
+        self.enable_autonomous_traffic_signs = rospy.Publisher('enable_autonomous/traffic_signs', Empty, queue_size=1)
         ############################### SUBSCRIBERS #####################################
         rospy.Subscriber("/joy", Joy, self.__get_data_joy)
         rospy.Subscriber("/joy_remote", Joy, self.__get_data_joy)
@@ -38,7 +39,11 @@ class Control():
             if self.joy_received_flag: #If the flag is 1, then publish the message
                 self.joy_received_flag = False
                 if (self.joy.buttons[0]):
-                    self.pub_enable_autonomous.publish()
+                    self.enable_autonomous_follow_closest_object.publish()
+                    enable_skip = True
+                    continue
+                elif (self.joy.buttons[1]):
+                    self.enable_autonomous_traffic_signs.publish()
                     enable_skip = True
                     continue
                 if (enable_skip):
