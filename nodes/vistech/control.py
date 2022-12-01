@@ -1,72 +1,98 @@
 #!/usr/bin/env python3
 import rospy
 from geometry_msgs.msg import Twist
+from sensor_msgs.msg import Joy
 from std_msgs.msg import Empty
 from math import pi
-import time
+from time import sleep
 
 #This class will subscribe to the /number topic and display the received number as a string message
 class Control():
     def __init__(self):
         ############################## Max velocity ###################################
-        self.max_linear_velocity = int(rospy.get_param("~max_linear_velocity", 1.0))
-        self.max_angular_velocity = int(rospy.get_param("~max_angular_velocity", pi))
+
+        self.manual_velocity = Twist()
+        self.follow_closest_object_velocity = Twist()
+        self.traffic_signs_velocity = Twist()
+        self.robot_velocity = Twist()
+        #################################################################################
+        self.max_linear_velocity = float(rospy.get_param("~max_linear_velocity", 1.0))
+        self.max_angular_velocity = float(rospy.get_param("~max_angular_velocity", pi))
             # Limit number
         self.max_angular_velocity = max(-pi, self.max_angular_velocity)
         self.max_angular_velocity = min(pi, self.max_angular_velocity)
-        #################################################################################
+
         rospy.on_shutdown(self.on_shutdown)
         ############################### Publisher ######################################
-        self.pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
+        self.pub_cmd_vel = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         ############################### SUBSCRIBERS #####################################
-        rospy.Subscriber("cmd_vel/manual", Twist, self.__cmd_vel_manual)
-        #Autonomous
-            #Cmd_vel
+        rospy.Subscriber("/joy", Joy, self.__get_data_joy)
+        rospy.Subscriber("/joy_remote", Joy, self.__get_data_joy)
         rospy.Subscriber("cmd_vel/follow_closest_object", Twist, self.__cmd_vel_autonomous_follow_closest_object)
         rospy.Subscriber("cmd_vel/traffic_signs", Twist, self.__cmd_vel_autonomous_traffic_signs)
-            # Enable
-        rospy.Subscriber("enable_autonomous/follow_closest_object", Empty, self.__enable_autonomous_follow_closest_object)
-        rospy.Subscriber("enable_autonomous/traffic_signs", Empty, self.__enable_autonomous_traffic_signs)
         ############ CONSTANTS AND VARIABLES ################
-        self.autonomous_traffic_signs_flag = 0 #This flag will tell us when at least one number has been received.
-        self.autonomous_follow_closest_object_flag = 0 #This flag will tell us when at least one number has been received.
-        self.cmd_vel = Twist()
-        self.autonomous_follow_closest_object = Twist()
-        self.autonomous_traffic_signs = Twist()
-        self.manual = Twist()
+        self.joy_received_flag =False #This flag will tell us when at least one number has been received.
+        self.new_received_flag =False #This flag will tell us when at least one number has been received.
+
+        self.joy = Joy()
         #********** INIT NODE **********###
-        r = rospy.Rate(60)
+        self.flag = 'manual'
+        self.enable_skip = False
+        r = rospy.Rate(60) #1Hz
         while not rospy.is_shutdown():
-            if self.autonomous_follow_closest_object_flag:
-                self.autonomous_follow_closest_object_flag = 1
-                self.cmd_vel = self.autonomous_follow_closest_object
-            elif self.autonomous_traffic_signs_flag:
-                self.autonomous_traffic_signs_flag = 1
-                self.cmd_vel = self.autonomous_traffic_signs
-            else:
-                self.cmd_vel = self.manual
-            self.pub.publish(self.cmd_vel)
+
+            if self.joy_received_flag: #If the flag is 1, then publish the message
+                self.joy_received_flag = False
+                self.__calculate_manual_velocity()
+                if (self.enable_skip):
+                    self.enable_skip = False
+                else:
+                    self.__define_cmd_vel()
+                self.new_received_flag = True
+            if self.new_received_flag: #If the flag is 1, then publish the message
+                self.new_received_flag = False
+                if(self.flag=='manual'):
+                    self.robot_velocity = self.manual_velocity
+                elif(self.flag=='follow_closest_object'):
+                    self.robot_velocity = self.follow_closest_object_velocity
+                elif(self.flag=='traffic_signs'):
+                    self.robot_velocity = self.traffic_signs_velocity
+                print(self.flag,self.robot_velocity)
+                self.pub_cmd_vel.publish(self.robot_velocity)
             r.sleep()
-    def __cmd_vel_manual(self, twist):
-        self.manual          = twist
-        self.autonomous_flag = 0
+    #Suscribers
+    def __get_data_joy(self, joy):
+        self.joy = joy
+        self.joy_received_flag = True
     def __cmd_vel_autonomous_follow_closest_object(self, twist):
-        self.autonomous_follow_closest_object          = twist
-    def __enable_autonomous_follow_closest_object(self,data):
-        time.sleep(5)
-        self.autonomous_follow_closest_object_flag     = 1
-
-
+        self.new_received_flag = True
+        self.follow_closest_object_velocity          = twist   
     def __cmd_vel_autonomous_traffic_signs(self, twist):
-        self.autonomous_traffic_signs          = twist
-    def __enable_autonomous_traffic_signs(self,data):
-        time.sleep(5)
-        self.autonomous_traffic_signs_flag     = 1
+        self.new_received_flag = True
+        self.traffic_signs_velocity          = twist    
+    # calculate velocity
+    def __define_cmd_vel(self):
+        if (self.joy.buttons[0]):
+            self.flag = 'follow_closest_object'
+            self.enable_skip = True
+            #sleep(5)
+        elif (self.joy.buttons[1]):
+            self.flag = 'traffic_signs'
+            self.enable_skip = True
+            #sleep(5)
+        else:
+            self.flag = 'manual'
+            self.enable_skip = False
 
+    def __calculate_manual_velocity(self):
+        self.manual_velocity.linear.x = self.joy.axes[1] * self.max_linear_velocity
+        self.manual_velocity.angular.z = -self.joy.axes[0] * self.max_angular_velocity
+        return
+    # shutdown
     def on_shutdown(self):
-        self.cmd_vel.linear.x = 0.0
-        self.cmd_vel.angular.z = 0.0
-        self.pub.publish(self.cmd_vel)
+        self.robot_velocity.linear.x = 0.0
+        self.robot_velocity.angular.z = 0.0
+        self.pub_cmd_vel.publish(self.robot_velocity)
         pass
 
 if __name__ == "__main__":

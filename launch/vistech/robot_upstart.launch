@@ -1,21 +1,30 @@
 <launch>
 <!--Control-->
+    <arg name="max_linear_velocity" value="0.25" />
+    <arg name="max_angular_velocity" value="1.57079632679" />
     <node pkg="joy" type="joy_node" name="joy_node"/>
-    <node pkg="vistech" type="autonomous_follow_closest_object.py" name="autonomous_follow_closest_object"/>
-    <node pkg="vistech" type="autonomous_traffic_signs.py" name="autonomous_traffic_signs"/>
-    <node pkg="vistech" type="control.py" name="control"/>
-    <node pkg="vistech" type="manual.py" name="manual"/>
+    <node pkg="vistech" type="autonomous_follow_closest_object.py" name="autonomous_follow_closest_object">
+        <param name="max_linear_velocity" value="$(arg max_linear_velocity)" />
+        <param name="max_angular_velocity" value="$(arg max_angular_velocity)" />
+    </node>
+    <node pkg="vistech" type="autonomous_traffic_signs.py" name="autonomous_traffic_signs">
+        <param name="max_linear_velocity" value="$(arg max_linear_velocity)" />
+        <param name="max_angular_velocity" value="$(arg max_angular_velocity)" />
+    </node>
+    <node pkg="vistech" type="control.py" name="control">
+        <param name="max_linear_velocity" value="$(arg max_linear_velocity)" />
+        <param name="max_angular_velocity" value="$(arg max_angular_velocity)" />
+    </node>
+    <!--Camera-->
+    <node pkg="vistech" type="traffic_signs_detection.py" name="traffic_signs_detection"/>
+    <!--Motors-->
+    <include file="$(find vistech)/launch/roboclaw_ros/roboclaw.launch">
+        <arg name="address_master" default="128"/>
+        <arg name="address_slave" default="129"/>
+    </include>
+    <!--Lidar-->
+    <include file="$(find vistech)/launch/rplidar_ros/rplidar.launch"/>
 
-
-
-
-<include file="$(find vistech)/launch/roboclaw_ros/roboclaw.launch">
-    <arg name="address_master" default="128"/>
-    <arg name="address_slave" default="129"/>
-</include>
-<!--Motors-->
-<include file="$(find vistech)/launch/rplidar_ros/rplidar.launch">
-</include>
 
 
 </launch>

@@ -8,11 +8,11 @@ from math import pi
 class Control():
     def __init__(self):
         ############################## Max velocity ###################################
-        max_linear_velocity = 1
+        max_linear_velocity = float(rospy.get_param("~max_linear_velocity", 1.0))
         max_distance = 12.0
         self.linear_proportional = max_linear_velocity/max_distance
         self.min_distance_to_move = 0.75
-        max_angular_velocity = pi
+        max_angular_velocity = float(rospy.get_param("~max_angular_velocity", pi))
         max_radius = pi
         self.angular_proportional = max_angular_velocity/max_radius
         self.min_radius_to_move = (6*pi)/180.0
