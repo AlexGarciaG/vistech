@@ -255,44 +255,22 @@ class Node:
             try:
                 if (rospy.get_rostime() - self.last_set_speed_time).to_sec() > 1./float(self.CMD_FREQ):
                     # rospy.loginfo("Did not get command for 1 second, stopping")
-                    try:
-                        with self.mutex:
-                            self.roboclaw.ForwardM1(self.address_master, 0)
-                            self.roboclaw.ForwardM2(self.address_master, 0)
-                            self.roboclaw.ForwardM1(self.address_slave, 0)
-                            self.roboclaw.ForwardM2(self.address_slave, 0)
-                    except OSError as e:
-                        #rospy.logerr("Could not stop")
-                        #rospy.logdebug(e)
-                        self.start_comunication()
-
+                    with self.mutex:
+                        self.roboclaw.ForwardM1(self.address_master, 0)
+                        self.roboclaw.ForwardM2(self.address_master, 0)
+                        self.roboclaw.ForwardM1(self.address_slave, 0)
+                        self.roboclaw.ForwardM2(self.address_slave, 0)
                 # TODO need find solution to the OSError11 looks like sync problem with serial
                 status1, enc1, crc1 = None, None, None
                 status2, enc2, crc2 = None, None, None
                 status1_1, enc1_1, crc1_1 = None, None, None
                 status2_1, enc2_1, crc2_1 = None, None, None
-                try:
-                    with self.mutex:
-                        status1, enc1, crc1 = self.roboclaw.ReadEncM1(self.address_master)
-                        status1_1, enc1_1, crc1_1 = self.roboclaw.ReadEncM1(self.address_slave)
-                except ValueError:
-                    pass
-                except OSError as e:
-                    #rospy.logwarn("ReadEncM1 OSError: %d", e.errno)
-                    #rospy.logdebug(e)
-                    self.start_comunication()
-                    continue
-                try:
-                    with self.mutex:
-                        status2, enc2, crc2 = self.roboclaw.ReadEncM2(self.address_master)
-                        status2_1, enc2_1, crc2_1 = self.roboclaw.ReadEncM2(self.address_slave)
-                except ValueError:
-                    pass
-                except OSError as e:
-                    #rospy.logwarn("ReadEncM2 OSError: %d", e.errno)
-                    #rospy.logdebug(e)
-                    self.start_comunication()
-                    continue
+                with self.mutex:
+                    status1, enc1, crc1 = self.roboclaw.ReadEncM1(self.address_master)
+                    #status1_1, enc1_1, crc1_1 = self.roboclaw.ReadEncM1(self.address_slave)
+                with self.mutex:
+                    status2, enc2, crc2 = self.roboclaw.ReadEncM2(self.address_master)
+                    #status2_1, enc2_1, crc2_1 = self.roboclaw.ReadEncM2(self.address_slave)
                 if ((isinstance(enc1,Number) and isinstance(enc2,Number))):
                     #rospy.logdebug(" Encoders %d %d" % (enc1, enc2))
                     self.encodm.update_publish((enc2), (enc1))

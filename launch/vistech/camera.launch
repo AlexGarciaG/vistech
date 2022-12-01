@@ -1,5 +1,0 @@
-<launch>
-    <node pkg="usb_cam" type="usb_cam_node" name="usb_cam_node">
-        <param name="pixel_format" value="yuyv" />
-    </node>
-</launch>

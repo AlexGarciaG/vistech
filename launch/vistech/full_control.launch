@@ -1,0 +1,17 @@
+<launch>
+    <!--Lidar-->
+    <remap from="scan" to="base_scan" />
+    <include file="$(find vistech)/launch/rplidar_ros/rplidar.launch"/>
+    <!--Camera-->
+    <node pkg="vistech" type="traffic_signs_detection.py" name="traffic_signs_detection"/>
+    <!--TF-->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base2laser_tf" args="-0.055  0  0.19  0  0  0  base_link laser"/> 
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base2odom_tf" args="0  0  0  0  0  0  map odom"/> 
+    <!--Mapping-->
+    <include file="$(find vistech)/launch/mapping/lidarMap.launch">
+    </include>
+    <!--
+    <include file="$(find vistech)/launch/mapping/evade_obstacles.launch">
+    </include>
+    -->
+</launch>

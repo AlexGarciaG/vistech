@@ -1,0 +1,21 @@
+<launch>
+
+	<!-- Some general parameters -->
+	<param name="use_sim_time" value="true" />
+	<rosparam file="$(find vistech)/config/mapping/ros.yaml"/>
+
+
+
+	<!-- Start the Operator to control the simulated robot -->
+	<node name="Operator" pkg="nav2d_operator" type="operator" >
+		<remap from="scan" to="base_scan"/>
+		<rosparam file="$(find vistech)/config/mapping/operator.yaml"/>
+		<rosparam file="$(find vistech)/config/mapping/costmap.yaml" ns="local_map" />
+	</node>
+
+
+
+	<!-- RVIZ to view the visualization 
+	<node name="RVIZ" pkg="rviz" type="rviz" args=" -d $(find nav2d_tutorials)/param/tutorial1.rviz" />
+	-->
+</launch>

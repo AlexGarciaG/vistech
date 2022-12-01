@@ -9,7 +9,7 @@
     <arg name="base_width" default="0.33"/>
     <arg name="run_diag" default="true"/>
     <arg name="cmd_frequency" default="20"/>
-    <node pkg="vistech" type="roboclaw_node_test_1.py" name="roboclaw_node" output="screen">
+    <node pkg="vistech" type="roboclaw_node.py" name="roboclaw_node" output="screen">
         <param name="~dev" value="$(arg dev)"/>
         <param name="~baud" value="$(arg baud)"/>
         <param name="~address_master" value="$(arg address_master)"/>

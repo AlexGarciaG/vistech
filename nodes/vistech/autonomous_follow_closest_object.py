@@ -22,7 +22,7 @@ class Control():
         ############################### Publisher ######################################
         self.pub = rospy.Publisher('cmd_vel/follow_closest_object', Twist, queue_size=1)
         ############################### SUBSCRIBERS #####################################
-        rospy.Subscriber("/scan", LaserScan, self.__get_data_laser)
+        rospy.Subscriber("/base_scan", LaserScan, self.__get_data_laser)
         ############ CONSTANTS AND VARIABLES ################
         self.laser_scan_received_flag =0 #This flag will tell us when at least one number has been received.
         self.laser = LaserScan()

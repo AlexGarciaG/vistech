@@ -1,4 +1,0 @@
-<launch>
-    <include file="$(find vistech)/launch/camera.launch" />
-    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find vistech)/configs/camera_debug.rviz" />
-</launch>
